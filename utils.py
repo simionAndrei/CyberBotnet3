@@ -24,7 +24,7 @@ def plot_estimation_error(x, values, xlabel, plt_title, filename, logger):
   plt.title(plt_title)
   plt.xlabel(xlabel)
   plt.ylabel("Estimation error")
-  plt.plot(x, values)
+  plt.plot(x, values, marker = "X")
 
   plt.savefig(logger.get_output_file(filename), dpi = 120, 
     bbox_inches='tight')

@@ -51,21 +51,29 @@ if __name__ == "__main__":
 
   df = load_data("DATA_FILE1", logger)
 
-  reservoir_sizes = [50, 100, 200, 300, 500, 700, 900, 1000]
-  errors = []
+  reservoir_sizes = [50, 100, 200, 300, 500, 700, 900, 1000, 1100, 1200, 1300, 1443]
+  num_runs = 10
+  top_n = 10
+  avg_errors = []
   for reservoir_size in reservoir_sizes:
-    reservoir = reservoir_sample(df, reservoir_size, logger)
+    errors = []
+    for _ in num_runs:
+      reservoir = reservoir_sample(df, reservoir_size, logger)
 
-    true_ip_freq = true_count(df, logger)
-    estimated_ip_freq = estimated_count(reservoir)
+      true_ip_freq = true_count(df, logger)
+      estimated_ip_freq = estimated_count(reservoir)
 
-    crt_err = get_estimation_error(true_ip_freq, estimated_ip_freq, 10)
-    errors.append(crt_err)
-    logger.log("Reservoir {}: error - {}".format(reservoir_size, crt_err), show_time = True)
-  
-  max_err = sum([elem[1] for elem in true_ip_freq[:10]])
-  x = [0] + reservoir_sizes
-  errors = [max_err] + errors
+      crt_err = get_estimation_error(true_ip_freq, estimated_ip_freq, top_n)
+      errors.append(crt_err)
+    
+    avg_errors.append(np.mean(errors))
+    logger.log("Reservoir {}: mean error after {} runs {}".format(
+      reservoir_size, num_runs, avg_errors[-1]), show_time = True)
+
+  max_err = sum([elem[1] for elem in true_ip_freq[:top_n]])
+  logger.log("Maximum possible estimation error {}".format(max_err))
+  x = [top_n] + reservoir_sizes
+  errors = [max_err] + avg_errors
   plot_estimation_error(x, errors, xlabel = "Reservoir size", 
     plt_title = "Reservoir sampling error at different reservoir sizes", 
     filename = "reservoir_sampling_err.png", logger = logger)
