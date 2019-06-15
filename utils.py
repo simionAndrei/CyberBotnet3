@@ -4,12 +4,13 @@ import pandas as pd
 def get_estimation_error(true_freq, estimated_freq, estimation_size):
 
   freq_err = 0
-
-  for ip, freq in estimated_freq[:estimation_size]:
-    if (ip, freq) in true_freq[:estimation_size]:
-      freq_err += abs(dict(true_freq)[ip] - dict(estimated_freq)[ip])
+  for ip, freq in true_freq[:estimation_size]:
+    if ip in list(zip(*estimated_freq[:estimation_size]))[0]:
+      print(ip)
+      print(dict(estimated_freq[:estimation_size])[ip])
+      freq_err += abs(freq - dict(estimated_freq[:estimation_size])[ip])
     else:
-      freq_err += dict(true_freq)[ip]
+      freq_err += freq
 
   return freq_err
 
