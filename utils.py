@@ -1,5 +1,19 @@
 import pandas as pd
 
+
+def get_estimation_error(true_freq, estimated_freq, estimation_size):
+
+  freq_err = 0
+
+  for ip, freq in estimated_freq[:estimation_size]:
+    if (ip, freq) in true_freq[:estimation_size]:
+      freq_err += abs(dict(true_freq)[ip] - dict(estimated_freq)[ip])
+    else:
+      freq_err += dict(true_freq)[ip]
+
+  return freq_err
+
+
 def load_data(data_key, logger):
 
   colnames = ["date", "duration", "protocol", "ip_src", "port_src", "ip_dest", 
