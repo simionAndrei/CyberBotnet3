@@ -1,18 +1,33 @@
 import pandas as pd
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 def get_estimation_error(true_freq, estimated_freq, estimation_size):
 
   freq_err = 0
   for ip, freq in true_freq[:estimation_size]:
     if ip in list(zip(*estimated_freq[:estimation_size]))[0]:
-      print(ip)
-      print(dict(estimated_freq[:estimation_size])[ip])
       freq_err += abs(freq - dict(estimated_freq[:estimation_size])[ip])
     else:
       freq_err += freq
 
   return freq_err
+
+
+def plot_estimation_error(x, values, xlabel, plt_title, filename, logger):
+
+  sns.set()
+  plt.figure(figsize=(6,6))
+
+  plt.title(plt_title)
+  plt.xlabel(xlabel)
+  plt.ylabel("Estimation error")
+  plt.plot(x, values)
+
+  plt.savefig(logger.get_output_file(filename), dpi = 120, 
+    bbox_inches='tight')
 
 
 def load_data(data_key, logger):
