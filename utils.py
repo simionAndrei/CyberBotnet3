@@ -1,12 +1,9 @@
-from tqdm import tqdm
 import pandas as pd
-
-from logger import Logger
 
 def load_data(data_key, logger):
 
-  colnames = ["date", "duration", "protocol", "ip_src", "ip_dest", 
-              "flags", "tos", "packets", "bytes", "flows", "label"]
+  colnames = ["date", "duration", "protocol", "ip_src", "port_src", "ip_dest", 
+              "port_dest", "flags", "tos", "packets", "bytes", "flows", "label"]
 
   data_file = logger.config_dict[data_key]
   logger.log("Start loading data from {}...".format(data_file))
@@ -22,8 +19,10 @@ def load_data(data_key, logger):
       crt_content.append(line_list[0] + " " + line_list[1]) #date
       crt_content.append(line_list[2]) #duration
       crt_content.append(line_list[3]) #protocol
-      crt_content.append(line_list[4]) #ip_src
-      crt_content.append(line_list[6]) #ip_dest
+      crt_content.append(line_list[4].split(':')[0]) #ip_src
+      crt_content.append(None if len(line_list[4].split(':')) == 1 else line_list[4].split(':')[1]) #port_src
+      crt_content.append(line_list[6].split(':')[0]) #ip_dest
+      crt_content.append(None if len(line_list[6].split(':')) == 1 else line_list[6].split(':')[1]) #port_dest
       crt_content.append(line_list[7]) #flags
       crt_content.append(line_list[8]) #tos
       crt_content.append(line_list[9]) #packets
@@ -42,7 +41,4 @@ def load_data(data_key, logger):
 
 
 if __name__ == "__main__":
-
-  logger = Logger(show = True, html_output = True, config_file = "config.txt")
-
-  df = load_data("DATA_FILE1", logger)
+  print("Library module. Not main function.")
