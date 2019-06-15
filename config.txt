@@ -1,0 +1,4 @@
+{
+  "DATA_FILE1": "capture20110815-2.pcap.netflow.labeled",
+  "INFECTED_HOST": "147.32.84.165"
+}
