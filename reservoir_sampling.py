@@ -5,7 +5,7 @@ from tqdm import tqdm
 import numpy as np
 
 from logger import Logger
-from utils import load_data, get_estimation_error
+from utils import load_data, get_estimation_error, plot_estimation_error
 
 def true_count(data_df, logger):
 
@@ -51,13 +51,21 @@ if __name__ == "__main__":
 
   df = load_data("DATA_FILE1", logger)
 
-  reservoir_size = 50
-  reservoir = reservoir_sample(df, reservoir_size, logger)
+  reservoir_sizes = [50, 100, 200, 300, 500, 700, 900, 1000]
+  errors = []
+  for reservoir_size in reservoir_sizes:
+    reservoir = reservoir_sample(df, reservoir_size, logger)
 
-  true_ip_freq = true_count(df, logger)
-  estimated_ip_freq = estimated_count(reservoir)
+    true_ip_freq = true_count(df, logger)
+    estimated_ip_freq = estimated_count(reservoir)
 
+    crt_err = get_estimation_error(true_ip_freq, estimated_ip_freq, 10)
+    errors.append(crt_err)
+    logger.log("Reservoir {}: error - {}".format(reservoir_size, crt_err), show_time = True)
+  
   max_err = sum([elem[1] for elem in true_ip_freq[:10]])
-  print(max_err)
-  crt_err = get_estimation_error(true_ip_freq, estimated_ip_freq, 10)
-  print(crt_err)
+  x = [0] + reservoir_sizes
+  errors = [max_err] + errors
+  plot_estimation_error(x, errors, xlabel = "Reservoir size", 
+    plt_title = "Reservoir sampling error at different reservoir sizes", 
+    filename = "reservoir_sampling_err.png", logger = logger)
