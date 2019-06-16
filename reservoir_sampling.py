@@ -13,17 +13,7 @@ def true_count(data_df, logger):
   host_df_out = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST1']]
   host_df_in  = data_df[data_df['ip_dest'] == logger.config_dict['INFECTED_HOST1']]
 
-  ip_out = Counter(host_df_out.values)
-  ip_in  = Counter(host_df_in.values)
-
-  ip_comb = ip_out.copy()
-
-  for key, value in ip_in.items():
-    if key in ip_out:
-      ip_comb[key] += value
-    else:
-      ip_comb[key] = value
-
+  ip_comb = Counter(np.concatenate((host_df_out['ip_dest'].values, host_df_in.['ip_src'].values)))
   ip_comb = sorted(ip_comb.items(), key=lambda x: x[1], reverse = True)
 
   return ip_comb
