@@ -1,9 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from logger import Logger
-from utils import load_data
-
 from collections import Counter
 import numpy as np
 
@@ -13,15 +10,16 @@ register_matplotlib_converters()
 def create_barplot(data_df, feature, plt_title, filename, logger):
 
   sns.set()
-  fig = plt.figure(figsize = (10,8))
+  fig = plt.figure(figsize = (20,10))
   
   x, y = zip(*Counter(data_df[feature]).items())
  
   plt.bar(x, y, color = "blue", log = True)
   
-  plt.xlabel(feature, fontsize = 14)
-  plt.ylabel("Count", fontsize = 14)
-  plt.title(plt_title)
+  plt.xlabel(feature, fontsize = 16)
+  plt.ylabel("Count", fontsize = 16)
+  plt.xticks(fontsize = 14, rotation = 90)
+  plt.title(plt_title, fontsize = 16)
 
   plt.savefig(logger.get_output_file(filename), dpi = 120, bbox_inches='tight')
 
@@ -61,32 +59,40 @@ def create_categories_heatmap(data_df, feats_pair, filename, logger):
   plt.savefig(logger.get_output_file(filename), dpi = 120, bbox_inches='tight')
 
 
-def create_time_plot(df, df_host, feature, plt_title, filename, logger):
+def create_time_plot(df, df_host, feature, filename, logger):
 
   sns.set()
-  #fig, ax = plt.subplots(1,2, figsize=(16,5))
-  fig = plt.figure(figsize=(18,8))
+  fig = plt.figure(figsize=(22,9))
 
   ax = [None, None]
   ax[0] = plt.subplot(121)
   ax[0].title.set_text("Infected host")
+  ax[0].title.set_fontsize(16)
   ax[0].set_ylabel(feature)
   ax[0].set_xlabel("Time")
+  ax[0].ticklabel_format(style = "plain")
   plt.plot(df_host.date, df_host[feature])
 
   df_legit = df[df.label != "Botnet"]
   ax[1] = plt.subplot(122)
   ax[1].title.set_text("Normal hosts")
+  ax[1].title.set_fontsize(16)
   ax[1].set_ylabel(feature)
   ax[1].set_xlabel("Time")
+  ax[1].ticklabel_format(style = "plain")
   plt.plot(df_legit.date, df_legit[feature])
-
+ 
+  plt.xticks(fontsize = 14)
+  plt.yticks(fontsize = 14)
 
   plt.savefig(logger.get_output_file(filename), dpi = 120, bbox_inches='tight')
 
 
 if __name__ == "__main__":
+  print("Library module. Not main function.")
 
+
+  '''
   logger = Logger(show = True, html_output = True, config_file = "config.txt")
 
   df = load_data("DATA_FILE1", logger)
@@ -104,3 +110,4 @@ if __name__ == "__main__":
     "Packets evolution in time for infected vs normal hosts", "packets_leg-bot.png", logger)
   create_time_plot(df, df_host, "bytes", 
     "Bytes evolution in time for infected vs normal hosts", "bytes_leg-bot.png", logger)
+  '''
