@@ -69,6 +69,7 @@ def load_data(data_key, logger):
   df['date'] = pd.to_datetime(df['date'])
   df['packets'] = pd.to_numeric(df['packets'])
   df['bytes'] = pd.to_numeric(df['bytes'])
+  df['duration'] = pd.to_numeric(df['duration'])
   df.sort_values(by=['date'], inplace = True) 
 
   logger.log("Finished loading file", show_time = True)
