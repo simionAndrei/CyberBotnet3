@@ -90,24 +90,3 @@ def create_time_plot(df, df_host, feature, filename, logger):
 
 if __name__ == "__main__":
   print("Library module. Not main function.")
-
-
-  '''
-  logger = Logger(show = True, html_output = True, config_file = "config.txt")
-
-  df = load_data("DATA_FILE1", logger)
-  
-  df = df[df.label != "Background"]
-
-  infected_host_ip = logger.config_dict['INFECTED_HOST']
-  df_host = df[(df['ip_src'] == infected_host_ip) | (df['ip_dest'] == infected_host_ip)]
-
-  create_categories_heatmap(df, ["protocol", "flags"], "prot_flags_heatm.png", logger)
-  create_barplot(df_host, "flags", "Flags distribution for an infected host", 
-    "flags_count_infected.png", logger)
-
-  create_time_plot(df, df_host, "packets", 
-    "Packets evolution in time for infected vs normal hosts", "packets_leg-bot.png", logger)
-  create_time_plot(df, df_host, "bytes", 
-    "Bytes evolution in time for infected vs normal hosts", "bytes_leg-bot.png", logger)
-  '''
