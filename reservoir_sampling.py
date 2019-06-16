@@ -10,12 +10,23 @@ from utils import load_data, get_estimation_error, plot_estimation_error
 
 def true_count(data_df, logger):
 
-  host_df = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST1']]
+  host_df_out = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST1']]
+  host_df_in  = data_df[data_df['ip_dest'] == logger.config_dict['INFECTED_HOST1']]
 
-  ip_occurences = Counter(host_df['ip_dest'].values).items()
-  ip_occurences = sorted(ip_occurences, key=lambda x: x[1], reverse = True)
+  ip_out = Counter(host_df_out.values)
+  ip_in  = Counter(host_df_in.values)
 
-  return ip_occurences
+  ip_comb = ip_out.copy()
+
+  for key, value in ip_in.items():
+    if key in ip_out:
+      ip_comb[key] += value
+    else:
+      ip_comb[key] = value
+
+  ip_comb = sorted(ip_comb.items(), key=lambda x: x[1], reverse = True)
+
+  return ip_comb
 
 
 def estimated_count(reservoir_list):
@@ -29,15 +40,19 @@ def reservoir_sample(data_df, reservoir_size, logger):
 
   for index, row in tqdm(data_df.iterrows()):
 
-    if row['ip_src'] != logger.config_dict['INFECTED_HOST1']:
+    if row['ip_src'] == logger.config_dict['INFECTED_HOST1']:
+      value = row['ip_dest']
+    elif row['ip_dest'] == logger.config_dict['INFECTED_HOST1']:
+      value = row['ip_src']
+    else:
       continue
 
     rank = np.random.uniform(low = 0.0, high = 1.0)
     if reservoir_pq.qsize() < reservoir_size:
-      reservoir_pq.put((-rank, row['ip_dest']), block = False)
+      reservoir_pq.put((-rank, value), block = False)
     else:
       crt_pair = reservoir_pq.get(block = False)
-      reservoir_pq.put(crt_pair if -crt_pair[0] < rank else (-rank, row['ip_dest']))
+      reservoir_pq.put(crt_pair if -crt_pair[0] < rank else (-rank, value))
 
   reservoir = []
   while not reservoir_pq.empty():
