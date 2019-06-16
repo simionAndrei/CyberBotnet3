@@ -7,9 +7,10 @@ import numpy as np
 from logger import Logger
 from utils import load_data, get_estimation_error, plot_estimation_error
 
+
 def true_count(data_df, logger):
 
-  host_df = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST']]
+  host_df = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST1']]
 
   ip_occurences = Counter(host_df['ip_dest'].values).items()
   ip_occurences = sorted(ip_occurences, key=lambda x: x[1], reverse = True)
@@ -28,7 +29,7 @@ def reservoir_sample(data_df, reservoir_size, logger):
 
   for index, row in tqdm(data_df.iterrows()):
 
-    if row['ip_src'] != logger.config_dict['INFECTED_HOST']:
+    if row['ip_src'] != logger.config_dict['INFECTED_HOST1']:
       continue
 
     rank = np.random.uniform(low = 0.0, high = 1.0)
@@ -51,7 +52,7 @@ if __name__ == "__main__":
 
   df = load_data("DATA_FILE1", logger)
 
-  reservoir_sizes = [50, 100, 200, 300, 500, 700, 900, 1000, 1100, 1200, 1300, 1443]
+  reservoir_sizes = [50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 5724]
   num_runs = 10
   top_n = 10
   avg_errors = []

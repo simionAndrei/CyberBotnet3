@@ -65,9 +65,15 @@ def load_data(data_key, logger):
       if line_idx % 100000 == 0:
         logger.log("Line {}: {}".format(line_idx, crt_content))
 
+  df = pd.DataFrame(file_content, columns = colnames)
+  df['date'] = pd.to_datetime(df['date'])
+  df['packets'] = pd.to_numeric(df['packets'])
+  df['bytes'] = pd.to_numeric(df['bytes'])
+  df.sort_values(by=['date'], inplace = True) 
+
   logger.log("Finished loading file", show_time = True)
 
-  return pd.DataFrame(file_content, columns = colnames)
+  return df
 
 
 if __name__ == "__main__":
