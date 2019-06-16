@@ -10,10 +10,10 @@ from utils import load_data, get_estimation_error, plot_estimation_error
 
 def true_count(data_df, logger):
 
-  host_df_out = data_df[data_df['ip_src'] == logger.config_dict['INFECTED_HOST1']]
+  host_df_out = data_df[data_df['ip_src']  == logger.config_dict['INFECTED_HOST1']]
   host_df_in  = data_df[data_df['ip_dest'] == logger.config_dict['INFECTED_HOST1']]
 
-  ip_comb = Counter(np.concatenate((host_df_out['ip_dest'].values, host_df_in.['ip_src'].values)))
+  ip_comb = Counter(np.concatenate( (host_df_out['ip_dest'].values, host_df_in['ip_src'].values) ))
   ip_comb = sorted(ip_comb.items(), key=lambda x: x[1], reverse = True)
 
   return ip_comb
@@ -57,7 +57,10 @@ if __name__ == "__main__":
 
   df = load_data("DATA_FILE1", logger)
 
-  reservoir_sizes = [50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 5724]
+  infected_host_ip = logger.config_dict['INFECTED_HOST1']
+  df_host = df[(df['ip_src'] == infected_host_ip) | (df['ip_dest'] == infected_host_ip)]
+
+  reservoir_sizes = [50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, df_host.shape[0]]
   num_runs = 10
   top_n = 10
   avg_errors = []
