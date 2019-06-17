@@ -41,14 +41,18 @@ def discretize(data_df, feature1, feature2, percentiles):
   feature1_space_size = data_df[feature1].unique().shape[0]
   feature2_space_size = data_df[feature2].unique().shape[0]
 
-  space_size = feature1_space_size * feature2_space_size
-
+  
   feature1_discrete_mapping = dict(zip(data_df[feature1].unique().tolist(), 
     range(feature1_space_size)))
 
   ordinal_ranks = {}
   for p in percentiles:
     ordinal_ranks[p] = int( (p/100) / feature2_space_size)
+
+
+  feature1_space_size = len(feature1_discrete_mapping.items())
+  feature2_space_size = len(percentiles) + 1
+  space_size = feature1_space_size * feature2_space_size
 
   feature2_discrete_mapping = {}
   sorted_feature2_space = sorted(data_df[feature2].unique().tolist())
