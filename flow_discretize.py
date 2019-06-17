@@ -71,6 +71,8 @@ def discretize(data_df, feature1, feature2, percentiles):
 
   data_df[feature1 + "_" + feature2 + "_comb"] = codes
 
+  return space_size
+
 
 if __name__ == "__main__":
 
