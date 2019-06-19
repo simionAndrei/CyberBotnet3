@@ -50,7 +50,6 @@ def discretize(data_df, feature1, feature2, percentiles):
     ordinal_ranks[p] = int( (p/100) / feature2_space_size)
 
 
-  feature1_space_size = len(feature1_discrete_mapping.items())
   feature2_space_size = len(percentiles) + 1
   space_size = feature1_space_size * feature2_space_size
 
