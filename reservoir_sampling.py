@@ -14,14 +14,14 @@ def true_count(data_df, logger):
   host_df_in  = data_df[data_df['ip_dest'] == logger.config_dict['INFECTED_HOST1']]
 
   ip_comb = Counter(np.concatenate( (host_df_out['ip_dest'].values, host_df_in['ip_src'].values) ))
-  ip_comb = sorted(ip_comb.items(), key=lambda x: x[1], reverse = True)
+  ip_comb = sorted(ip_comb.items(), key=lambda x: (x[1], x[0]), reverse = True)
 
   return ip_comb
 
 
 def estimated_count(reservoir_list):
 
-  return sorted(Counter(reservoir_list).items(), key=lambda x: x[1], reverse = True)
+  return sorted(Counter(reservoir_list).items(), key=lambda x: (x[1], x[0]), reverse = True)
 
 
 def reservoir_sample(data_df, reservoir_size, logger):
@@ -53,6 +53,7 @@ def reservoir_sample(data_df, reservoir_size, logger):
 
 if __name__ == "__main__":
 
+  top_n = 10
   logger = Logger(show = True, html_output = True, config_file = "config.txt")
 
   df = load_data("DATA_FILE1", logger)
@@ -60,21 +61,23 @@ if __name__ == "__main__":
   infected_host_ip = logger.config_dict['INFECTED_HOST1']
   df_host = df[(df['ip_src'] == infected_host_ip) | (df['ip_dest'] == infected_host_ip)]
 
-  reservoir_sizes = [50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, df_host.shape[0]]
-  num_runs = 10
-  top_n = 10
-  avg_errors = []
-  for reservoir_size in reservoir_sizes:
-    errors = []
-    for _ in num_runs:
-      reservoir = reservoir_sample(df, reservoir_size, logger)
+  true_ip_freq = true_count(df_host, logger)
+  logger.log("Top {} infected host ip true distribution {}".format(top_n, true_ip_freq[:top_n]))
 
-      true_ip_freq = true_count(df, logger)
+  reservoir_sizes = [50, 100, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 5500, df_host.shape[0]]
+  num_runs = 50
+  avg_errors = []
+  for reservoir_size in reservoir_sizes: 
+    errors = []
+    for _ in range(num_runs):
+      reservoir = reservoir_sample(df_host, reservoir_size, logger)
+
       estimated_ip_freq = estimated_count(reservoir)
 
       crt_err = get_estimation_error(true_ip_freq, estimated_ip_freq, top_n)
       errors.append(crt_err)
     
+    logger.log("Top {} infected host ip estimated distribution {}".format(top_n, estimated_ip_freq[:top_n]))
     avg_errors.append(np.mean(errors))
     logger.log("Reservoir {}: mean error after {} runs {}".format(
       reservoir_size, num_runs, avg_errors[-1]), show_time = True)
