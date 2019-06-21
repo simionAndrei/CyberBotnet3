@@ -136,8 +136,8 @@ if __name__ == "__main__":
   gc.collect()
 
   model = LogisticRegression(solver = 'lbfgs', max_iter = 500)
-  model = RandomForestClassifier(n_estimators = 200, "min_samples_split": 4, "min_samples_leaf": 2, 
-    "max_depth": 9, "criterion": "gini", n_jobs = -1)
+  model = RandomForestClassifier(n_estimators = 200, min_samples_split = 4, min_samples_leaf = 2, 
+    max_depth = 9, criterion = "gini", n_jobs = -1)
 
   model = train_model(model, X_train, y_train, True, logger)
   test_model(model, X_test, y_test, 0.5, logger)
