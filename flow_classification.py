@@ -13,6 +13,8 @@ import pandas as pd
 import numpy as np
 import gc
 
+from bonus import create_adversarial_examples
+
 
 def get_train_test_data(df, logger):
 
@@ -93,12 +95,12 @@ def test_model(model, X_test, y_test, threshold, logger):
   y_pred = y_pred > threshold
   
   logger.log("Threshold {}".format(threshold))
-  logger.log("Packet level")
+  logger.log("Packet level", tabs = 1)
   tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
-  logger.log("TN: {}, FP: {}, FN: {}, TP: {}".format(tn, fp, fn, tp))
-  logger.log("Accuracy: {:.4f}".format(accuracy_score(y_test, y_pred)))
-  logger.log("Precision: {:.4f}".format(precision_score(y_test, y_pred)))
-  logger.log("Recall: {:.4f}".format(recall_score(y_test, y_pred)))
+  logger.log("TN: {}, FP: {}, FN: {}, TP: {}".format(tn, fp, fn, tp), tabs = 2)
+  logger.log("Accuracy: {:.4f}".format(accuracy_score(y_test, y_pred)), tabs = 2)
+  logger.log("Precision: {:.4f}".format(precision_score(y_test, y_pred)), tabs = 2)
+  logger.log("Recall: {:.4f}".format(recall_score(y_test, y_pred)), tabs = 2)
 
   y_pred_host = []
   unique_ips_test = np.unique(ips_test) 
@@ -114,12 +116,12 @@ def test_model(model, X_test, y_test, threshold, logger):
 
   y_true_host = [1 if ip in logger.config_dict['INFECTED_HOSTS'] else 0 for ip in unique_ips_test]
   
-  logger.log("Host level")
+  logger.log("Host level", tabs = 1)
   tn, fp, fn, tp = confusion_matrix(y_true_host, y_pred_host).ravel()
-  logger.log("TN: {}, FP: {}, FN: {}, TP: {}".format(tn, fp, fn, tp))
-  logger.log("Accuracy: {:.4f}".format(accuracy_score(y_true_host, y_pred_host)))
-  logger.log("Precision: {:.4f}".format(precision_score(y_true_host, y_pred_host)))
-  logger.log("Recall: {:.4f}".format(recall_score(y_true_host, y_pred_host)))
+  logger.log("TN: {}, FP: {}, FN: {}, TP: {}".format(tn, fp, fn, tp), tabs = 2)
+  logger.log("Accuracy: {:.4f}".format(accuracy_score(y_true_host, y_pred_host)), tabs = 2)
+  logger.log("Precision: {:.4f}".format(precision_score(y_true_host, y_pred_host)), tabs = 2)
+  logger.log("Recall: {:.4f}".format(recall_score(y_true_host, y_pred_host)), tabs = 2)
 
 
 if __name__ == "__main__":
@@ -134,7 +136,8 @@ if __name__ == "__main__":
   gc.collect()
 
   model = LogisticRegression(solver = 'lbfgs', max_iter = 500)
-  model = RandomForestClassifier(n_estimators = 200, n_jobs = -1)
+  model = RandomForestClassifier(n_estimators = 200, "min_samples_split": 4, "min_samples_leaf": 2, 
+    "max_depth": 9, "criterion": "gini", n_jobs = -1)
 
   model = train_model(model, X_train, y_train, True, logger)
   test_model(model, X_test, y_test, 0.5, logger)
@@ -143,3 +146,12 @@ if __name__ == "__main__":
   test_model(model, X_test, y_test, 0.95, logger)
   test_model(model, X_test, y_test, 0.99, logger)
   test_model(model, X_test, y_test, 0.999, logger)
+
+  duration_alterations = [+1, 0, 0, +1, +10, +45, +120, +120, 0, 0]
+  packets_alterations  = [0, +1, 0, +1, +10, +30, +100, 0, +100, 0]
+  bytes_alterations    = [0, 0, +1, +1, +16, +256, +1024, 0, 0, +1024]
+
+  for alteration in zip(duration_alterations, packets_alterations, bytes_alterations):
+    X_test_new = create_adversarial_examples(X_test, y_test, alter_packets = alteration[1],
+      alter_bytes = alteration[2], alter_duration = alteration[0], logger = logger)
+    test_model(model, X_test_new, y_test, 0.99, logger)
