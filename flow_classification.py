@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
   model = LogisticRegression(solver = 'lbfgs', max_iter = 500)
   model = RandomForestClassifier(n_estimators = 200, min_samples_split = 4, min_samples_leaf = 2, 
-    max_depth = 9, criterion = "gini", n_jobs = -1)
+    max_depth = 9, criterion = "gini", random_state = 13, n_jobs = -1)
 
   model = train_model(model, X_train, y_train, True, logger)
   test_model(model, X_test, y_test, 0.5, logger)
@@ -154,4 +154,4 @@ if __name__ == "__main__":
   for alteration in zip(duration_alterations, packets_alterations, bytes_alterations):
     X_test_new = create_adversarial_examples(X_test, y_test, alter_packets = alteration[1],
       alter_bytes = alteration[2], alter_duration = alteration[0], logger = logger)
-    test_model(model, X_test_new, y_test, 0.99, logger)
+    test_model(model, X_test_new, y_test, 0.95, logger)
