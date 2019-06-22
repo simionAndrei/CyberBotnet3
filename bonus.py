@@ -7,7 +7,7 @@ def create_adversarial_examples(X_test, y_test, alter_packets, alter_bytes, alte
   if alter_packets != 0:
     X_test_ = [elem[:4] + [elem[4] + alter_packets] + elem[5:] for elem in X_test_]
   if alter_bytes != 0:
-    X_test_ = [elem[:4] + [elem[5] + alter_bytes] for elem in X_test_]
+    X_test_ = [elem[:5] + [elem[5] + alter_bytes] for elem in X_test_]
   if alter_duration!= 0:
     X_test_ = [elem[:1] + [elem[1] + alter_duration] + elem[2:] for elem in X_test_]
 
