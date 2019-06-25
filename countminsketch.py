@@ -38,9 +38,9 @@ class CountMinSketch:
     def extract_top(self, keys):
         results = []
         for key in keys:
-            results.append([self[key], key])
+            results.append([key, self[key]])
 
-        results.sort(key=itemgetter(0), reverse=True)
+        results.sort(key=itemgetter(1), reverse=True)
 
         return results
 

@@ -16,13 +16,9 @@ def extract_other(data_df, self_ip):
 
 def true_count(ips):
     ip_occurences = Counter(ips.values).items()
+    ip_occurences = sorted(ip_occurences, key=lambda x: (x[1], x[0]), reverse=True)
 
-    d = {}
-
-    for ip, occurences in ip_occurences:
-        d[ip] = occurences
-
-    return d
+    return ip_occurences
 
 
 def get_estimation_error(true_freq, estimated_freq, estimation_size):
@@ -32,16 +28,6 @@ def get_estimation_error(true_freq, estimated_freq, estimation_size):
             freq_err += abs(freq - dict(estimated_freq[:estimation_size])[ip])
         else:
             freq_err += freq
-
-        return freq_err
-
-
-def get_estimation_error_m(true_freq, estimated_freq, estimation_size):
-    freq_err = 0
-
-    for [freq, ip] in estimated_freq[:estimation_size]:
-        if ip in true_freq:
-            freq_err += abs(true_freq[ip] - freq)
 
     return freq_err
 
