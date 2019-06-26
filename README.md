@@ -49,10 +49,25 @@ to run
 * `output\` - for storing plots at high resolution (**Better to be inspected if the ones from the report are too small due to page limit**)
 * `logs\` - for storing a couple of logs files referred in the report
 
-## Downloading the data-set when using `git clone`
-In case you somehow do not have the data-set please either use the `downlopad_data_files.sh`
-or manually install git lfs.
+## Data :floppy_disk:
+If unable to clone the repository, download the [CTU-13 dataset](https://www.stratosphereips.org/datasets-ctu13/) as follows:
 
-## Requirements
-We use `python3`. The requirements can be installed from requirements.txt
-or using `conda`.
+* for Task 1+2 [Scenario 6](https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-47/) file `capture20110816.pcap.netflow.labeled`
+* for the other tasks [Scenario 10](https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-51/) file `capture20110818.pcap.netflow.labeled`
+
+> :exclamation: After downloading the files, place them into the `data\` folder
+
+## Instructions for cloning :memo:
+The data files were uploaded using [Git LFS](https://git-lfs.github.com/) being over 100MB. Git LFS is needed to clone the repository. Install it manually or try to use `downlopad_data_files.sh`.
+
+## Installation :computer:
+The scripts can be run in [Anaconda](https://www.anaconda.com/download/) Windows/Linux environment.
+
+You need to create an Anaconda :snake: `python 3.6` environment named `cyber3`.
+Inside that environment some addition packages needs to be installed. Run the following commands inside Anaconda Prompt ⌨:
+```shell
+(base) conda create -n cyber3 python=3.6 anaconda
+(base) conda activate cyber3
+(cyber3) conda install -c conda-forge tqdm 
+(cyber3) conda install -c conda-forge mmh3
+```
