@@ -58,7 +58,7 @@ If unable to clone the repository, download the [CTU-13 dataset](https://www.str
 > :exclamation: After downloading the files, place them into the `data\` folder
 
 ## Instructions for cloning :memo:
-The files being over 100MB were uploaded using [Git LFS](https://git-lfs.github.com/). Git LFS is needed the clone the repository. Install it mannualy or try to use `downlopad_data_files.sh`.
+The data files were uploaded using [Git LFS](https://git-lfs.github.com/) being over 100MB. Git LFS is needed to clone the repository. Install it manually or try to use `downlopad_data_files.sh`.
 
 ## Installation :computer:
 The scripts can be run in [Anaconda](https://www.anaconda.com/download/) Windows/Linux environment.
