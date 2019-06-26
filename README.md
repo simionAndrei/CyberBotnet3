@@ -53,6 +53,13 @@ to run
 In case you somehow do not have the data-set please either use the `downlopad_data_files.sh`
 or manually install git lfs.
 
-## Requirements
-We use `python3`. The requirements can be installed from requirements.txt
-or using `conda`.
+## Installation :computer:
+The scripts can be run in [Anaconda](https://www.anaconda.com/download/) Windows/Linux environment.
+
+You need to create an Anaconda :snake: `python 3.6` environment named `cyber3`.
+Inside that environment some addition packages needs to be installed. Run the following commands inside Anaconda Prompt ⌨:
+```shell
+(base) conda create -n cyber3 python=3.6 anaconda
+(base) conda activate cyber3
+(cyber3) conda install -c conda-forge tqdm 
+```
