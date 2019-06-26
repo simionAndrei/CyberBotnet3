@@ -49,6 +49,12 @@ to run
 * `output\` - for storing plots at high resolution (**Better to be inspected if the ones from the report are too small due to page limit**)
 * `logs\` - for storing a couple of logs files referred in the report
 
+## Data :floppy_disk:
+If unable to clone the repository, download the [CTU-13 dataset](https://www.stratosphereips.org/datasets-ctu13/) as follows:
+
+* for Task 1+2 [Scenario 6](https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-47/) file `capture20110816.pcap.netflow.labeled`
+* for the other tasks [Scenario 10](https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-51/) file `capture20110818.pcap.netflow.labeled`
+
 ## Downloading the data-set when using `git clone`
 In case you somehow do not have the data-set please either use the `downlopad_data_files.sh`
 or manually install git lfs.
@@ -62,4 +68,5 @@ Inside that environment some addition packages needs to be installed. Run the fo
 (base) conda create -n cyber3 python=3.6 anaconda
 (base) conda activate cyber3
 (cyber3) conda install -c conda-forge tqdm 
+(cyber3) conda install -c conda-forge mmh3
 ```
